@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyMind AI - Professional Local Programming Assistant</title>
+    <!-- Strictly 100% Offline: Local CSS & JS only, zero external CDNs -->
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body class="dark-theme">
+    <div class="app-layout">
+        <!-- Collapsible Left Sidebar -->
+        <aside class="app-sidebar" id="appSidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div class="brand-meta">
+                    <span class="brand-title">EasyMind <span class="accent-text">AI</span></span>
+                    <span class="brand-badge">Local Engine</span>
+                </div>
+                <button id="btnToggleSidebar" class="sidebar-toggle-btn" title="Toggle Sidebar (Collapse/Expand)">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">WORKSPACE</div>
+                <button class="nav-item active" data-view="dashboard" id="nav-dashboard">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Dashboard</span>
+                </button>
+
+                <button class="nav-item" data-view="generate" id="nav-generate">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"/>
+                            <polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">English to Code</span>
+                </button>
+
+                <button class="nav-item" data-view="practice" id="nav-practice">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polygon points="10 8 16 12 10 16 10 8"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Practice & Debug</span>
+                </button>
+
+                <button class="nav-item" data-view="doctor" id="nav-doctor">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Error Doctor</span>
+                </button>
+
+                <button class="nav-item" data-view="tests" id="nav-tests">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Custom Tests & Runner</span>
+                </button>
+
+                <button class="nav-item" data-view="examples" id="nav-examples">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Language Examples</span>
+                </button>
+
+                <div class="nav-section-label">ASSISTANCE & TOOLS</div>
+                <button class="nav-item" data-view="chat" id="nav-chat">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">AI Tutor Chat</span>
+                </button>
+
+                <button class="nav-item" data-view="settings" id="nav-settings">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Settings & Snippets</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-status-pill">
+                    <span class="status-pulse-dot" id="sidebarDot"></span>
+                    <span class="sidebar-status-text" id="sidebarStatusText">LM Studio Checking</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Top Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <button id="btnMobileMenu" class="icon-btn-ghost mobile-only" title="Toggle Navigation">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="current-section-title" id="currentSectionTitle">
+                        <span class="breadcrumb-root">EasyMind AI</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-current" id="headerSectionName">Dashboard</span>
+                    </div>
+                </div>
+
+                <div class="header-center">
+                    <!-- Connection Status Badge -->
+                    <div id="lmStatusCard" class="status-badge checking" title="LM Studio Local Connection Status">
+                        <span class="badge-dot"></span>
+                        <span id="lmStatusText">Connecting to LM Studio...</span>
+                        <button id="btnRefreshStatus" class="badge-refresh-btn" title="Refresh Connection">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 4v6h-6M1 20v-6h6"/>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <!-- Global Model Selector -->
+                    <div class="header-control-group">
+                        <label for="headerModelSelect" class="header-label">Model:</label>
+                        <select id="headerModelSelect" class="header-select">
+                            <option value="">Auto-Detecting...</option>
+                        </select>
+                    </div>
+
+                    <!-- Global Language Selector -->
+                    <div class="header-control-group">
+                        <label for="globalLanguageSelect" class="header-label">Language:</label>
+                        <select id="globalLanguageSelect" class="header-select">
+                            <option value="python" selected>🐍 Python (.py)</option>
+                            <option value="javascript">🌐 JavaScript (.js)</option>
+                            <option value="c">⚡ C (.c)</option>
+                            <option value="cpp">🚀 C++ (.cpp)</option>
+                            <option value="java">☕ Java (.java)</option>
+                            <option value="html">📄 HTML (.html)</option>
+                            <option value="css">🎨 CSS (.css)</option>
+                            <option value="sql">🗄️ SQL (.sql)</option>
+                            <option value="any">💡 Any / General</option>
+                        </select>
+                    </div>
+
+                    <!-- Saved Snippets Trigger -->
+                    <button id="btnOpenSaved" class="header-action-btn" title="View Saved Code Snippets">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        <span>Snippets (<span id="savedCount">0</span>)</span>
+                    </button>
+
+                    <!-- Clear Chat Action -->
+                    <button id="btnClearChat" class="header-action-btn btn-danger-outline" title="Clear Chat History">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                        <span>Clear</span>
+                    </button>
+
+                    <!-- Open EasyMind AI Launcher Button (Port 5000) -->
+                    <a href="http://127.0.0.1:5000" id="btnOpenPort5000" class="header-launch-link" target="_blank" title="Launch EasyMind AI on Port 5000 in your browser">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                        <span>Open EasyMind AI (Port 5000)</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- File Mode Notice (Appears when opened via file:// protocol directly) -->
+            <div id="fileProtocolNotice" class="file-protocol-notice hidden">
+                <div class="notice-inner">
+                    <div class="notice-content">
+                        <span class="notice-badge">FILE PREVIEW MODE</span>
+                        <span class="notice-text">Viewing standalone index.html. To use the active local Python server & LM Studio inference:</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <a href="http://127.0.0.1:5000" class="btn-open-live" target="_blank">🚀 Open EasyMind AI (http://127.0.0.1:5000)</a>
+                        <button class="btn-close-notice" id="btnCloseNotice" title="Dismiss">✕</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Offline / Disconnection Warning Banner -->
+            <div id="connectionBanner" class="alert-banner hidden">
+                <div class="banner-inner">
+                    <div class="banner-icon">⚠️</div>
+                    <div class="banner-message">
+                        <strong id="bannerTitle">LM Studio Server Offline</strong>:
+                        <span id="bannerMsg">Make sure LM Studio is open on Windows 11, a model is loaded into memory, and the Local Server is running on port 1234.</span>
+                    </div>
+                    <div class="banner-actions">
+                        <button id="btnBannerRetry" class="btn-sm btn-primary">Retry Connection</button>
+                        <button id="btnBannerGuide" class="btn-sm btn-secondary">Setup Guide</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workspace Content Viewports -->
+            <main class="content-viewport" id="contentViewport">
+
+                <!-- =========================================================
+                     SECTION A: DASHBOARD / HOME
+                     ========================================================= -->
+                <section class="view-panel active" id="view-dashboard">
+                    <div class="dashboard-hero">
+                        <div class="hero-left">
+                            <h1 class="hero-title">Welcome to EasyMind AI</h1>
+                            <p class="hero-subtitle">
+                                Your professional, 100% private coding and learning assistant.
+                                Powered locally on Windows 11 by LM Studio. No cloud APIs. Complete offline privacy.
+                            </p>
+                            <div class="hero-tags">
+                                <span class="hero-tag">🔒 100% Offline AI</span>
+                                <span class="hero-tag">⚡ Zero Cloud Latency</span>
+                                <span class="hero-tag">💾 SQLite Persistent</span>
+                                <span class="hero-tag">💻 Windows 11 Native</span>
+                            </div>
+                            <div class="hero-actions" style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+                                <a href="http://127.0.0.1:5000" id="heroBtnLaunchServer" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none;" target="_blank">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                    </svg>
+                                    Open EasyMind AI (http://127.0.0.1:5000)
+                                </a>
+                                <button class="btn-secondary" id="heroBtnGoChat" style="display: inline-flex; align-items: center; gap: 8px;">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                    Open AI Tutor Chat
+                                </button>
+                            </div>
+                        </div>
+                        <div class="hero-right">
+                            <div class="hero-quick-status">
+                                <div class="quick-status-item">
+                                    <span class="qs-label">Inference Engine</span>
+                                    <span class="qs-value highlight-cyan">LM Studio (Local)</span>
+                                </div>
+                                <div class="quick-status-item">
+                                    <span class="qs-label">Active Model</span>
+                                    <span class="qs-value" id="dashActiveModel">Detecting...</span>
+                                </div>
+                                <div class="quick-status-item">
+                                    <span class="qs-label">Execution Sandbox</span>
+                                    <span class="qs-value highlight-emerald">Python & Node.js Subprocesses</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Stats Grid -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon bg-indigo">⚡</div>
+                            <div class="metric-data">
+                                <span class="metric-num" id="statEngine">LM Studio</span>
+                                <span class="metric-label">Local Inference</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon bg-cyan">🌐</div>
+                            <div class="metric-data">
+                                <span class="metric-num">8 Languages</span>
+                                <span class="metric-label">Python, C, C++, Java, JS, HTML, CSS, SQL</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon bg-emerald">💾</div>
+                            <div class="metric-data">
+                                <span class="metric-num" id="statSnippets">0</span>
+                                <span class="metric-label">Saved Code Snippets</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon bg-purple">🩺</div>
+                            <div class="metric-data">
+                                <span class="metric-num">Doctor & Tests</span>
+                                <span class="metric-label">Diagnostic Tools</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Launchers Grid -->
+                    <h2 class="section-heading">Core Assistant Tools</h2>
+                    <div class="feature-cards-grid">
+                        <div class="feature-launch-card" data-target="generate">
+                            <div class="flc-header">
+                                <div class="flc-icon bg-indigo">⚡</div>
+                                <span class="flc-badge">Code Generation</span>
+                            </div>
+                            <h3 class="flc-title">English to Code</h3>
+                            <p class="flc-desc">Describe your programming requirement in plain English and receive production-grade, commented code with Run and Copy controls.</p>
+                            <button class="btn-launch">Launch Tool →</button>
+                        </div>
+
+                        <div class="feature-launch-card" data-target="practice">
+                            <div class="flc-header">
+                                <div class="flc-icon bg-cyan">🎯</div>
+                                <span class="flc-badge">Guided Practice</span>
+                            </div>
+                            <h3 class="flc-title">Practice & Debug</h3>
+                            <p class="flc-desc">Test your understanding. Input a problem statement and your code attempt to get hints, structural analysis, and corrected logic.</p>
+                            <button class="btn-launch">Launch Tool →</button>
+                        </div>
+
+                        <div class="feature-launch-card" data-target="doctor">
+                            <div class="flc-header">
+                                <div class="flc-icon bg-rose">🩺</div>
+                                <span class="flc-badge">Error Diagnosis</span>
+                            </div>
+                            <h3 class="flc-title">Error Doctor</h3>
+                            <p class="flc-desc">Paste stack traces, compiler errors, or exceptions alongside broken code. Get root-cause analysis, plain English explanations, and fixes.</p>
+                            <button class="btn-launch">Launch Tool →</button>
+                        </div>
+
+                        <div class="feature-launch-card" data-target="tests">
+                            <div class="flc-header">
+                                <div class="flc-icon bg-emerald">🧪</div>
+                                <span class="flc-badge">Test Automation</span>
+                            </div>
+                            <h3 class="flc-title">Custom Questions & Tests</h3>
+                            <p class="flc-desc">Generate solutions, configure input/output test cases, run tests in an isolated sandbox, and compare actual outputs against expected.</p>
+                            <button class="btn-launch">Launch Tool →</button>
+                        </div>
+
+                        <div class="feature-launch-card" data-target="examples">
+                            <div class="flc-header">
+                                <div class="flc-icon bg-amber">📚</div>
+                                <span class="flc-badge">Reference Library</span>
+                            </div>
+                            <h3 class="flc-title">Language Examples</h3>
+                            <p class="flc-desc">Explore verified, executable code examples across Python, C, C++, Java, JavaScript, HTML, CSS, and SQL with syntax takeaways.</p>
+                            <button class="btn-launch">Launch Tool →</button>
+                        </div>
+
+                        <div class="feature-launch-card" data-target="chat">
+                            <div class="flc-header">
+                                <div class="flc-icon bg-purple">💬</div>
+                                <span class="flc-badge">Interactive Tutor</span>
+                            </div>
+                            <h3 class="flc-title">AI Tutor Chat</h3>
+                            <p class="flc-desc">Freely converse with your offline tutor, ask conceptual questions, request step-by-step algorithms, or explore coding architectures.</p>
+                            <button class="btn-launch">Launch Tool →</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     SECTION B: SIMPLE ENGLISH TO CODE
+                     ========================================================= -->
+                <section class="view-panel" id="view-generate">
+                    <div class="split-workspace">
+                        <!-- Left Panel: Input & Settings -->
+                        <div class="panel-card input-panel">
+                            <div class="panel-header">
+                                <div class="panel-title-group">
+                                    <h2 class="panel-title">English to Code Generator</h2>
+                                    <span class="panel-subtitle">Describe your logic in plain English</span>
+                                </div>
+                                <div class="panel-badge-lang" id="genLangBadge">PYTHON</div>
+                            </div>
+
+                            <form id="generateForm" class="panel-form">
+                                <div class="form-group">
+                                    <label for="generatePrompt" class="form-label">Programming Task / Description:</label>
+                                    <textarea id="generatePrompt" class="form-textarea" rows="6" placeholder="Example: Create a function that takes a list of transactions and returns the total spending grouped by category in descending order..." required></textarea>
+                                </div>
+
+                                <div class="prompt-chips-wrapper">
+                                    <span class="chips-label">Sample Tasks:</span>
+                                    <div class="chips-list">
+                                        <button type="button" class="prompt-chip" data-target="generatePrompt" data-prompt="Write a function to deduplicate and sort a list of dictionaries by a specific key.">Deduplicate List</button>
+                                        <button type="button" class="prompt-chip" data-target="generatePrompt" data-prompt="Create a thread-safe singleton class with lazy initialization.">Thread-Safe Singleton</button>
+                                        <button type="button" class="prompt-chip" data-target="generatePrompt" data-prompt="Implement a binary search algorithm with edge case validation and time complexity analysis.">Binary Search</button>
+                                        <button type="button" class="prompt-chip" data-target="generatePrompt" data-prompt="Create a custom debounce decorator with time delay parameter.">Debounce Decorator</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions-bar">
+                                    <button type="submit" id="btnGenerateSubmit" class="btn-action-primary">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                        </svg>
+                                        <span>Generate Code</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Right Panel: Output, Editor, Run, and Explanation -->
+                        <div class="panel-card output-panel">
+                            <div class="panel-header">
+                                <div class="panel-title-group">
+                                    <h2 class="panel-title">Generated Code & Runner</h2>
+                                    <span class="panel-subtitle" id="genStatusSubtitle">Ready for generation</span>
+                                </div>
+                                <div class="code-actions-toolbar" id="genToolbar" style="display: none;">
+                                    <button class="btn-code-tool" id="btnCopyGenCode" title="Copy code to clipboard">
+                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        </svg>
+                                        <span>Copy Code</span>
+                                    </button>
+                                    <button class="btn-code-tool btn-run" id="btnRunGenCode" title="Run code locally in safe sandbox">
+                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polygon points="5 3 19 12 5 21 5 3"/>
+                                        </svg>
+                                        <span>Run Code</span>
+                                    </button>
+                                    <button class="btn-code-tool" id="btnSaveGenCode" title="Save code to file & SQLite">
+                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                            <polyline points="17 21 17 13 7 13 7 21"/>
+                                            <polyline points="7 3 7 8 15 8"/>
+                                        </svg>
+                                        <span>Save to File</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="output-content-area" id="genOutputArea">
+                                <div class="empty-placeholder">
+                                    <div class="empty-icon">⚡</div>
+                                    <h3>No Code Generated Yet</h3>
+                                    <p>Select your language in the header, enter a task on the left, and click <strong>Generate Code</strong>.</p>
+                                </div>
+                            </div>
+
+                            <!-- Terminal Console Area -->
+                            <div class="terminal-console-wrapper hidden" id="genConsoleWrapper">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                    <span class="terminal-title">Terminal Console Output</span>
+                                    <span class="terminal-runtime-badge" id="genConsoleRuntime">0ms</span>
+                                </div>
+                                <pre class="terminal-output" id="genConsoleOutput"></pre>
+                            </div>
+
+                            <!-- Explanation Accordion -->
+                            <details class="explanation-box hidden" id="genExplanationBox">
+                                <summary class="explanation-summary">
+                                    <span>📖 Plain English Code Breakdown</span>
+                                </summary>
+                                <div class="explanation-body markdown-body" id="genExplanationBody"></div>
+                            </details>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     SECTION C: PRACTICE AND DEBUG
+                     ========================================================= -->
+                <section class="view-panel" id="view-practice">
+                    <div class="split-workspace">
+                        <!-- Left Panel: Inputs -->
+                        <div class="panel-card input-panel">
+                            <div class="panel-header">
+                                <div class="panel-title-group">
+                                    <h2 class="panel-title">Practice & Debug Workspace</h2>
+                                    <span class="panel-subtitle">Review code logic and isolate flaws</span>
+                                </div>
+                                <button type="button" class="btn-sample-action" id="btnLoadSamplePractice">
+                                    <span>Load Sample Question</span>
+                                </button>
+                            </div>
+
+                            <form id="practiceForm" class="panel-form">
+                                <div class="form-group">
+                                    <label for="practiceQuestion" class="form-label">Programming Question / Problem:</label>
+                                    <textarea id="practiceQuestion" class="form-textarea" rows="3" placeholder="Enter the problem statement or requirements..." required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="practiceCode" class="form-label">Your Code Attempt:</label>
+                                    <textarea id="practiceCode" class="form-textarea code-font" rows="8" placeholder="Paste your code attempt here..." required></textarea>
+                                </div>
+
+                                <div class="form-actions-bar">
+                                    <button type="submit" id="btnPracticeSubmit" class="btn-action-primary">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <line x1="12" y1="8" x2="12" y2="12"/>
+                                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                        </svg>
+                                        <span>Analyze & Debug Code</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Right Panel: Analysis & Feedback -->
+                        <div class="panel-card output-panel">
+                            <div class="panel-header">
+                                <div class="panel-title-group">
+                                    <h2 class="panel-title">Tutor Analysis & Corrected Code</h2>
+                                    <span class="panel-subtitle" id="practiceStatusSubtitle">Submit your attempt to see breakdown</span>
+                                </div>
+                                <div class="code-actions-toolbar" id="practiceToolbar" style="display: none;">
+                                    <button class="btn-code-tool" id="btnCopyPracticeCode">Copy Corrected Code</button>
+                                    <button class="btn-code-tool btn-run" id="btnRunPracticeCode">Run Corrected Code</button>
+                                </div>
+                            </div>
+
+                            <div class="output-content-area" id="practiceOutputArea">
+                                <div class="empty-placeholder">
+                                    <div class="empty-icon">🎯</div>
+                                    <h3>Ready to Practice</h3>
+                                    <p>Click <strong>Load Sample Question</strong> or paste your own question and code attempt on the left.</p>
+                                </div>
+                            </div>
+
+                            <!-- Terminal Console -->
+                            <div class="terminal-console-wrapper hidden" id="practiceConsoleWrapper">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots"><span></span><span></span><span></span></div>
+                                    <span class="terminal-title">Console Output</span>
+                                    <span class="terminal-runtime-badge" id="practiceConsoleRuntime">0ms</span>
+                                </div>
+                                <pre class="terminal-output" id="practiceConsoleOutput"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     SECTION D: ERROR DOCTOR
+                     ========================================================= -->
+                <section class="view-panel" id="view-doctor">
+                    <div class="split-workspace">
+                        <!-- Left Panel: Error Message & Broken Code -->
+                        <div class="panel-card input-panel">
+                            <div class="panel-header">
+                                <div class="panel-title-group">
+                                    <h2 class="panel-title">Error Doctor Diagnostic</h2>
+                                    <span class="panel-subtitle">Diagnose stack traces, exceptions & bugs</span>
+                                </div>
+                                <button type="button" class="btn-sample-action" id="btnLoadSampleError">
+                                    <span>Load Sample Error</span>
+                                </button>
+                            </div>
+
+                            <form id="doctorForm" class="panel-form">
+                                <div class="form-group">
+                                    <label for="doctorErrorMsg" class="form-label">Error Message / Stack Trace / Compiler Output:</label>
+                                    <textarea id="doctorErrorMsg" class="form-textarea code-font" rows="4" placeholder="Paste the exact error message or stack trace here..." required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="doctorCode" class="form-label">Relevant Code Block:</label>
+                                    <textarea id="doctorCode" class="form-textarea code-font" rows="8" placeholder="Paste the code that generated the error..." required></textarea>
+                                </div>
+
+                                <div class="form-actions-bar">
+                                    <button type="submit" id="btnDoctorSubmit" class="btn-action-primary btn-rose">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                        </svg>
+                                        <span>Diagnose & Repair</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Right Panel: Diagnosis & Prescriptions -->
+                        <div class="panel-card output-panel">
+                            <div class="panel-header">
+                                <div class="panel-title-group">
+                                    <h2 class="panel-title">Diagnostic Report & Repair</h2>
+                                    <span class="panel-subtitle" id="doctorStatusSubtitle">Awaiting error report</span>
+                                </div>
+                                <div class="code-actions-toolbar" id="doctorToolbar" style="display: none;">
+                                    <button class="btn-code-tool" id="btnCopyDoctorCode">Copy Fixed Code</button>
+                                    <button class="btn-code-tool btn-run" id="btnRunDoctorCode">Run Fixed Code</button>
+                                </div>
+                            </div>
+
+                            <div class="output-content-area" id="doctorOutputArea">
+                                <div class="empty-placeholder">
+                                    <div class="empty-icon">🩺</div>
+                                    <h3>No Diagnostics Run Yet</h3>
+                                    <p>Paste an error message and code on the left, or click <strong>Load Sample Error</strong> to see a diagnosis.</p>
+                                </div>
+                            </div>
+
+                            <!-- Terminal Console -->
+                            <div class="terminal-console-wrapper hidden" id="doctorConsoleWrapper">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots"><span></span><span></span><span></span></div>
+                                    <span class="terminal-title">Fixed Code Execution Console</span>
+                                    <span class="terminal-runtime-badge" id="doctorConsoleRuntime">0ms</span>
+                                </div>
+                                <pre class="terminal-output" id="doctorConsoleOutput"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     SECTION E: CUSTOM QUESTIONS AND TEST CASES
+                     ========================================================= -->
+                <section class="view-panel" id="view-tests">
+                    <div class="tests-workspace">
+                        <!-- Top Row: Problem & Solution Code -->
+                        <div class="split-workspace top-split">
+                            <div class="panel-card">
+                                <div class="panel-header">
+                                    <div class="panel-title-group">
+                                        <h2 class="panel-title">Problem Statement</h2>
+                                        <span class="panel-subtitle">Define problem or generate solution with LM Studio</span>
+                                    </div>
+                                    <button type="button" class="btn-sample-action" id="btnLoadSampleTests">
+                                        <span>Load Sample Problem</span>
+                                    </button>
+                                </div>
+                                <div class="panel-form">
+                                    <textarea id="testsProblemPrompt" class="form-textarea" rows="4" placeholder="Enter your custom problem description (e.g. Read an integer N, print N*2)..."></textarea>
+                                    <div class="form-actions-bar">
+                                        <button type="button" id="btnGenerateTestsSolution" class="btn-action-primary">
+                                            <span>Generate Solution & Cases</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-card">
+                                <div class="panel-header">
+                                    <div class="panel-title-group">
+                                        <h2 class="panel-title">Solution Code</h2>
+                                        <span class="panel-subtitle">Editable source code to be tested</span>
+                                    </div>
+                                    <div class="code-actions-toolbar">
+                                        <button class="btn-code-tool" id="btnCopyTestsCode">Copy Code</button>
+                                        <button class="btn-code-tool btn-run" id="btnRunTestsCodeSingle">Run Once</button>
+                                    </div>
+                                </div>
+                                <textarea id="testsCodeInput" class="form-textarea code-font editor-style" rows="6" placeholder="# Enter or generate solution code that reads from stdin and prints to stdout..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Row: Test Case Manager & Automated Test Runner -->
+                        <div class="panel-card testcases-card">
+                            <div class="panel-header">
+                                <div class="panel-title-group">
+                                    <h2 class="panel-title">Test Cases Manager</h2>
+                                    <span class="panel-subtitle">Define inputs and expected outputs to run against code</span>
+                                </div>
+                                <div class="testcases-actions">
+                                    <button type="button" class="btn-sm btn-secondary" id="btnAddTestCase">
+                                        <span>+ Add Test Case</span>
+                                    </button>
+                                    <button type="button" class="btn-sm btn-primary" id="btnRunAllTestCases">
+                                        <span>▶ Run All Test Cases</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Test Cases List -->
+                            <div class="testcases-list" id="testCasesList">
+                                <!-- Test case items will be rendered here dynamically -->
+                            </div>
+
+                            <!-- Test Run Results Summary -->
+                            <div class="test-results-container hidden" id="testResultsContainer">
+                                <div class="results-summary-bar">
+                                    <div class="results-stat-group">
+                                        <span class="results-badge" id="resultsBadge">PASSED</span>
+                                        <span class="results-text" id="resultsSummaryText">2 of 2 tests passed</span>
+                                    </div>
+                                    <div class="results-legend">
+                                        <span class="legend-item"><span class="legend-dot pass"></span> Passed</span>
+                                        <span class="legend-item"><span class="legend-dot fail"></span> Failed</span>
+                                    </div>
+                                </div>
+                                <div class="results-table-wrapper">
+                                    <table class="results-table" id="resultsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Input (stdin)</th>
+                                                <th>Expected Output</th>
+                                                <th>Actual Output</th>
+                                                <th>Status</th>
+                                                <th>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="resultsTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     SECTION F: OTHER LANGUAGES & EXAMPLES
+                     ========================================================= -->
+                <section class="view-panel" id="view-examples">
+                    <div class="examples-container">
+                        <div class="examples-header-bar">
+                            <div class="examples-title-group">
+                                <h2 class="panel-title">Curated Language Examples & Reference</h2>
+                                <span class="panel-subtitle">Verified educational examples for all 8 supported languages</span>
+                            </div>
+
+                            <!-- Language Tabs -->
+                            <div class="lang-pills-bar" id="examplesLangPills">
+                                <button class="lang-pill active" data-lang="python">🐍 Python</button>
+                                <button class="lang-pill" data-lang="javascript">🌐 JavaScript</button>
+                                <button class="lang-pill" data-lang="c">⚡ C</button>
+                                <button class="lang-pill" data-lang="cpp">🚀 C++</button>
+                                <button class="lang-pill" data-lang="java">☕ Java</button>
+                                <button class="lang-pill" data-lang="html">📄 HTML</button>
+                                <button class="lang-pill" data-lang="css">🎨 CSS</button>
+                                <button class="lang-pill" data-lang="sql">🗄️ SQL</button>
+                            </div>
+                        </div>
+
+                        <!-- Examples Grid -->
+                        <div class="examples-cards-stream" id="examplesCardsStream">
+                            <!-- Populated dynamically via /api/examples -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     SECTION G: AI TUTOR CHAT
+                     ========================================================= -->
+                <section class="view-panel" id="view-chat">
+                    <div class="chat-layout-wrapper">
+                        <!-- Mode Selector Bar -->
+                        <div class="chat-toolbar">
+                            <div class="mode-chips-bar" id="chatModeChips">
+                                <button class="chat-mode-chip active" data-mode="chat">
+                                    <span>💬 Ask Tutor</span>
+                                </button>
+                                <button class="chat-mode-chip" data-mode="generate">
+                                    <span>⚡ Generate Code</span>
+                                </button>
+                                <button class="chat-mode-chip" data-mode="explain">
+                                    <span>📖 Explain Code</span>
+                                </button>
+                                <button class="chat-mode-chip" data-mode="debug">
+                                    <span>🐛 Debug Code</span>
+                                </button>
+                                <button class="chat-mode-chip" data-mode="guide">
+                                    <span>🪜 Step-by-Step Guide</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Chat Message Stream -->
+                        <div class="chat-messages-viewport" id="chatMessagesViewport">
+                            <div class="chat-welcome-state" id="chatWelcomeState">
+                                <div class="cws-icon">💬</div>
+                                <h2>EasyMind AI Interactive Tutor</h2>
+                                <p>Ask any programming question, request architecture designs, or learn algorithms step by step.</p>
+                            </div>
+                            <div class="messages-list" id="chatMessagesList"></div>
+                            
+                            <!-- Loading Indicator -->
+                            <div class="chat-loading-row hidden" id="chatLoadingRow">
+                                <div class="loading-bubble">
+                                    <div class="typing-dots">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                    <span class="loading-msg" id="chatLoadingText">Thinking locally with LM Studio...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input Box -->
+                        <div class="chat-input-bar">
+                            <form id="tutorChatForm" class="tutor-chat-form">
+                                <div class="chat-textarea-box">
+                                    <textarea id="tutorInput" class="tutor-textarea" rows="2" placeholder="Ask your tutor anything... (Enter to send, Shift+Enter for newline)" required></textarea>
+                                    <button type="submit" id="btnSendTutor" class="btn-send-tutor" title="Send message">
+                                        <span>Send</span>
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="22" y1="2" x2="11" y2="13"/>
+                                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     SECTION H: SETTINGS & SNIPPETS
+                     ========================================================= -->
+                <section class="view-panel" id="view-settings">
+                    <div class="settings-workspace">
+                        <!-- Settings Row 1: Connection & Models -->
+                        <div class="panel-card">
+                            <div class="panel-header">
+                                <div class="panel-title-group">
+                                    <h2 class="panel-title">LM Studio Connection & Model Manager</h2>
+                                    <span class="panel-subtitle">Configure your 100% offline inference engine</span>
+                                </div>
+                                <button type="button" class="btn-sm btn-primary" id="btnTestConnectionSettings">
+                                    <span>Test Connection</span>
+                                </button>
+                            </div>
+
+                            <div class="settings-grid">
+                                <div class="setting-item">
+                                    <label class="setting-label">Local Server Endpoint:</label>
+                                    <input type="text" class="setting-input" value="http://localhost:1234/v1" readonly>
+                                    <span class="setting-help">OpenAI-compatible local server provided by LM Studio on Windows 11.</span>
+                                </div>
+
+                                <div class="setting-item">
+                                    <label for="settingsModelSelect" class="setting-label">Selected Active Model:</label>
+                                    <select id="settingsModelSelect" class="setting-input"></select>
+                                    <span class="setting-help">Select which loaded model EasyMind AI uses for inferences.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Settings Row 2: Saved Snippets Library -->
+                        <div class="panel-card">
+                            <div class="panel-header">
+                                <div class="panel-title-group">
+                                    <h2 class="panel-title">Saved Code Snippets Library</h2>
+                                    <span class="panel-subtitle">Stored safely in SQLite and generated_code/ directory</span>
+                                </div>
+                                <div class="snippets-search-box">
+                                    <input type="text" id="snippetsSearchInput" class="setting-input" placeholder="Filter snippets by title or language...">
+                                </div>
+                            </div>
+
+                            <div class="saved-snippets-stream" id="settingsSavedSnippetsList">
+                                <div class="empty-state">No saved snippets yet. Click "Save to File" on any generated code block!</div>
+                            </div>
+                        </div>
+
+                        <!-- Settings Row 3: Offline Setup Documentation -->
+                        <div class="panel-card">
+                            <div class="panel-header">
+                                <div class="panel-title-group">
+                                    <h2 class="panel-title">LM Studio Offline Setup Guide</h2>
+                                    <span class="panel-subtitle">Quick reference for setting up before going offline</span>
+                                </div>
+                            </div>
+
+                            <div class="guide-steps-grid">
+                                <div class="guide-step-card">
+                                    <div class="step-badge">1</div>
+                                    <h4>Download Model</h4>
+                                    <p>Search & download <code>Qwen2.5-Coder-7B</code> or <code>qwen/qwen3-4b-thinking</code> in LM Studio while connected.</p>
+                                </div>
+                                <div class="guide-step-card">
+                                    <div class="step-badge">2</div>
+                                    <h4>Start Local Server</h4>
+                                    <p>Go to the Local Server tab (<code>&lt;-&gt;</code>), select your model at top, and click "Start Server" on port 1234.</p>
+                                </div>
+                                <div class="guide-step-card">
+                                    <div class="step-badge">3</div>
+                                    <h4>Disconnect Wi-Fi</h4>
+                                    <p>Disconnect Wi-Fi or internet. EasyMind AI runs 100% offline with zero cloud telemetry.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal: Saved Snippets Quick Viewer -->
+    <div id="savedModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <h2 class="modal-title">Saved Code Snippets</h2>
+                    <span class="modal-subtitle">Stored in SQLite and generated_code/ directory</span>
+                </div>
+                <button id="btnCloseSaved" class="btn-close-modal">✕</button>
+            </div>
+            <div class="modal-body" id="savedSnippetsContainer">
+                <div class="empty-state">No saved snippets yet. Click "Save to File" on any generated code block!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: LM Studio Setup Guide -->
+    <div id="guideModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <h2 class="modal-title">LM Studio Local Setup Guide</h2>
+                    <span class="modal-subtitle">100% Offline AI Configuration for Windows 11</span>
+                </div>
+                <button id="btnCloseGuide" class="btn-close-modal">✕</button>
+            </div>
+            <div class="modal-body modal-guide-content">
+                <div class="guide-step">
+                    <div class="step-num">1</div>
+                    <div class="step-details">
+                        <h4>Download & Open LM Studio</h4>
+                        <p>Launch <strong>LM Studio</strong> on your Windows 11 machine.</p>
+                    </div>
+                </div>
+
+                <div class="guide-step">
+                    <div class="step-num">2</div>
+                    <div class="step-details">
+                        <h4>Download a Compatible Model</h4>
+                        <p>Search and download any instruction or coding model in GGUF format.</p>
+                    </div>
+                </div>
+
+                <div class="guide-step">
+                    <div class="step-num">3</div>
+                    <div class="step-details">
+                        <h4>Start the Local Server</h4>
+                        <p>Click on the <strong>Local Server (<-> icon)</strong> tab in LM Studio, select your model, and click <strong>"Start Server"</strong> on port <code>1234</code>.</p>
+                    </div>
+                </div>
+
+                <div class="guide-alert">
+                    <strong>Hackathon Tip:</strong> Once your model is downloaded and running on port 1234, you can completely disconnect Wi-Fi. EasyMind AI will continue to generate code, run Python and JavaScript, execute SQL queries, and diagnose bugs 100% offline!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Strictly 100% Offline: Local JavaScript only -->
+    <script src="static/script.js"></script>
+</body>
+</html>
